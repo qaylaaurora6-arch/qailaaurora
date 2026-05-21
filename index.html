@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pengusir Malas</title>
+
+  <style>
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      background:linear-gradient(135deg,#3b82f6,#1e3a8a);
+      font-family:Arial, sans-serif;
+      overflow:hidden;
+      color:white;
+    }
+
+    h1{
+      margin-bottom:10px;
+      font-size:40px;
+    }
+
+    p{
+      margin:5px;
+      font-size:20px;
+    }
+
+    .book{
+      width:180px;
+      height:180px;
+      background:white;
+      border-radius:25px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-size:90px;
+      cursor:pointer;
+      user-select:none;
+      transition:0.2s;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .book:active{
+      transform:scale(0.95);
+    }
+
+    .warning{
+      margin-top:20px;
+      font-size:28px;
+      color:yellow;
+      font-weight:bold;
+      opacity:0;
+      transition:0.3s;
+    }
+
+    .show{
+      opacity:1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📚 Pengusir Malas</h1>
+  <p>Tekan & tahan buku selama mungkin!</p>
+
+  <div class="book" id="book">
+    📖
+  </div>
+
+  <p>⏱️ Waktu Bertahan: <span id="time">0</span> detik</p>
+
+  <div class="warning" id="warning">
+    AYO FOKUS!!! 🔥
+  </div>
+
+  <script>
+    const book = document.getElementById("book");
+    const timeText = document.getElementById("time");
+    const warning = document.getElementById("warning");
+
+    let holding = false;
+    let seconds = 0;
+    let timer;
+
+    // Suara "Ayo Fokus!"
+    function speakWarning() {
+      const speech = new SpeechSynthesisUtterance("Ayo Fokus!");
+      speech.lang = "id-ID";
+      speech.pitch = 1;
+      speech.rate = 1;
+      speech.volume = 1;
+
+      speechSynthesis.speak(speech);
+    }
+
+    // Mulai menahan
+    function startHold() {
+      if (holding) return;
+
+      holding = true;
+
+      timer = setInterval(() => {
+        seconds++;
+        timeText.textContent = seconds;
+      }, 1000);
+
+      warning.classList.remove("show");
+    }
+
+    // Saat dilepas
+    function stopHold() {
+      if (!holding) return;
+
+      holding = false;
+      clearInterval(timer);
+
+      warning.classList.add("show");
+
+      speakWarning();
+    }
+
+    // Mouse
+    book.addEventListener("mousedown", startHold);
+    document.addEventListener("mouseup", stopHold);
+
+    // Touch HP
+    book.addEventListener("touchstart", startHold);
+    document.addEventListener("touchend", stopHold);
+  </script>
+
+</body>
+</html>
